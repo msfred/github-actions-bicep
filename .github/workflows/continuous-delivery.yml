@@ -66,6 +66,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: 
       name: Development
+      url: ${{ steps.deployStep.outputs.webAppName }}.azurewebsites.net
     
     steps:
       # Download Artifacts
@@ -109,6 +110,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: 
       name: QA
+      url: ${{ steps.deployStep.outputs.webAppName }}.azurewebsites.net
     
     steps:
       # Download Artifacts
@@ -151,6 +153,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: 
       name: Stage
+      url: ${{ steps.deployStep.outputs.webAppName }}-${{ env.deploymentSlotName }}.azurewebsites.net
 
     outputs:
       resourceGroupName: ${{ steps.deployStep.outputs.resourceGroupName }}
@@ -198,6 +201,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: 
       name: Production
+      url: ${{ steps.deployStep.outputs.webAppName }}.azurewebsites.net
 
     steps:
       - name: Deploy to Production
