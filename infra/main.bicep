@@ -25,7 +25,6 @@ module appPlanDeploy 'appPlan.bicep' = {
   name: 'appPlanDeploy'
   scope: rg
   params: {
-    environment: environment
     location: location
     planName: planName    
   }
@@ -52,5 +51,6 @@ module slotDeploy 'slot.bicep' = if (environment == 'PROD') {
   }
 }
 
-output output1 string = environment
+output environmentId string = environment
+output resourceGroupName string = rgName
 output webAppName string = webAppName

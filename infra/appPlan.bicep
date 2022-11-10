@@ -1,4 +1,3 @@
-param environment string
 param location string = resourceGroup().location
 param planName string
 param sku string = 'S1'
@@ -16,4 +15,3 @@ resource appPlan 'Microsoft.Web/serverfarms@2021-01-15' = {
 }
 
 output planId string = appPlan.id
-output output1 string = environment
