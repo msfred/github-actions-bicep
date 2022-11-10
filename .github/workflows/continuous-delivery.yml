@@ -25,7 +25,6 @@ concurrency:
 env:
   deploymentSlotName: stage
   location: eastus
-  prodResourceGroup: rg-prod
 
 jobs:
   
@@ -86,7 +85,7 @@ jobs:
         id: deployStep
         with:
           scope: subscription
-          subscriptionId: ${{ secrets.SUBSCRIPTIONID }}
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           region: ${{ env.location }}
           template: ./infra/main.bicep
           parameters: ./infra/main.dev.parameters.json
@@ -99,7 +98,7 @@ jobs:
           package: ./build
 
       - name: Deployment Message
-        run: echo "Deployed Application to ${{ steps.deployStep.outputs.output1 }}"
+        run: echo "Deployed Application to ${{ steps.deployStep.outputs.environmentId }}"
 
 
   # Deploy to the QA servers
@@ -129,7 +128,7 @@ jobs:
         id: deployStep
         with:
           scope: subscription
-          subscriptionId: ${{ secrets.SUBSCRIPTIONID }}
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           region: ${{ env.location }}
           template: ./infra/main.bicep
           parameters: ./infra/main.qa.parameters.json
@@ -142,7 +141,7 @@ jobs:
           package: ./build
 
       - name: Deployment Message
-        run: echo "Deployed Application to ${{ steps.deployStep.outputs.output1 }}"
+        run: echo "Deployed Application to ${{ steps.deployStep.outputs.environmentId }}"
 
 
   # Deploy to the Staging servers
@@ -154,6 +153,7 @@ jobs:
       name: Stage
 
     outputs:
+      resourceGroupName: ${{ steps.deployStep.outputs.resourceGroupName }}
       webAppName: ${{ steps.deployStep.outputs.webAppName }}
     
     steps:
@@ -174,7 +174,7 @@ jobs:
         id: deployStep
         with:
           scope: subscription
-          subscriptionId: ${{ secrets.SUBSCRIPTIONID }}
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           region: ${{ env.location }}
           template: ./infra/main.bicep
           parameters: ./infra/main.prod.parameters.json
@@ -188,7 +188,7 @@ jobs:
           package: ./build
 
       - name: Deployment Message
-        run: echo "Deployed Application to ${{ steps.deployStep.outputs.output1 }}"
+        run: echo "Deployed Application to ${{ steps.deployStep.outputs.environmentId }}"
 
 
   # Deploy to the Production servers
@@ -215,4 +215,4 @@ jobs:
       - uses: azure/cli@v1
         with:
           inlineScript: |
-            az webapp deployment slot swap -g ${{ env.prodResourceGroup }} -n ${{ needs.DeployStage.outputs.webAppName }} -s ${{ env.deploymentSlotName }}
+            az webapp deployment slot swap -g ${{ needs.DeployStage.outputs.resourceGroupName }} -n ${{ needs.DeployStage.outputs.webAppName }} -s ${{ env.deploymentSlotName }}

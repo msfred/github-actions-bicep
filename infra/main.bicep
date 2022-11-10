@@ -16,21 +16,23 @@ param rgName string
 param slotName string = 'stage'
 param webAppName string
 
+// Resource Group is a dependency and will be created if it does not already exist
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: rgName
   location: location
 }
 
+// Deploy the App Service Plan
 module appPlanDeploy 'appPlan.bicep' = {
   name: 'appPlanDeploy'
   scope: rg
   params: {
-    environment: environment
     location: location
     planName: planName    
   }
 }
 
+// Deploy the Web App
 module webAppDeploy 'webApp.bicep' = {
   name: 'webAppDeploy'
   scope: rg
@@ -41,6 +43,7 @@ module webAppDeploy 'webApp.bicep' = {
   }
 }
 
+// Deploy the Deployment Slot to the Web App
 module slotDeploy 'slot.bicep' = if (environment == 'PROD') {
   name: 'slotDeploy'
   scope: rg
@@ -52,5 +55,6 @@ module slotDeploy 'slot.bicep' = if (environment == 'PROD') {
   }
 }
 
-output output1 string = environment
+output environmentId string = environment
+output resourceGroupName string = rgName
 output webAppName string = webAppName
