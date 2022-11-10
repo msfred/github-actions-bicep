@@ -24,6 +24,7 @@ concurrency:
   
 env:
   deploymentSlotName: stage
+  location: eastus
 
 jobs:
   
@@ -85,6 +86,7 @@ jobs:
         with:
           scope: subscription
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          region: ${{ env.location }}
           template: ./infra/main.bicep
           parameters: ./infra/main.dev.parameters.json
 
@@ -127,6 +129,7 @@ jobs:
         with:
           scope: subscription
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          region: ${{ env.location }}
           template: ./infra/main.bicep
           parameters: ./infra/main.qa.parameters.json
 
@@ -172,6 +175,7 @@ jobs:
         with:
           scope: subscription
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          region: ${{ env.location }}
           template: ./infra/main.bicep
           parameters: ./infra/main.prod.parameters.json
 
