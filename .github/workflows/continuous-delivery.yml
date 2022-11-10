@@ -86,7 +86,7 @@ jobs:
         id: deployStep
         with:
           scope: subscription
-          subscriptionId: ${{ secrets.SUBSCRIPTIONID }}
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           region: ${{ env.location }}
           template: ./infra/main.bicep
           parameters: ./infra/main.dev.parameters.json
@@ -129,7 +129,7 @@ jobs:
         id: deployStep
         with:
           scope: subscription
-          subscriptionId: ${{ secrets.SUBSCRIPTIONID }}
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           region: ${{ env.location }}
           template: ./infra/main.bicep
           parameters: ./infra/main.qa.parameters.json
@@ -174,7 +174,7 @@ jobs:
         id: deployStep
         with:
           scope: subscription
-          subscriptionId: ${{ secrets.SUBSCRIPTIONID }}
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           region: ${{ env.location }}
           template: ./infra/main.bicep
           parameters: ./infra/main.prod.parameters.json
