@@ -1,0 +1,21 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "0.0.0.1",
+    "parameters": {
+        "environment": {
+            "value": "PROD"
+        },
+        "location": {
+            "value": "eastus"
+        },
+        "rgName": {
+            "value": "rg-gha-sample-prod"
+        },
+        "planName": {
+            "value": "asp-0a1b2c"
+        },
+        "webAppName": {
+            "value": "app-0a1b2c"
+        }
+    }
+}
