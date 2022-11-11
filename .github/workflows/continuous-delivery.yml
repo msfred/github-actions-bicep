@@ -201,7 +201,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: 
       name: Production
-      url: https://${{ steps.deployStep.outputs.webAppName }}.azurewebsites.net
+      url: https://${{ needs.DeployStage.outputs.webAppName }}.azurewebsites.net
 
     steps:
       - name: Deploy to Production
