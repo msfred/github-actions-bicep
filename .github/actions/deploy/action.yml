@@ -1,0 +1,68 @@
+name: Deploy
+description: Deploys Infrastructure and WebApp
+
+inputs:
+  azureClientId:
+    description: Azure App Registration Client ID
+    required: true
+  azureSubscriptionId:
+    description: Azure Subscription ID
+    required: true
+  azureTenantId:
+    description: Azure Tenant ID
+    required: true
+  deploymentSlotName:
+    description: Name of the deployment slot.  If not specified, uses Production.
+    required: false
+    default: Production
+  environmentId:
+    description: Short name for the environment being deployed to
+    required: true
+  location:
+    description: Azure location where the subscription will record logs for deployments
+    required: true
+
+outputs:
+  resourceGroupName:
+    description: Name of the Azure Resource Group that contains the WebApp
+    value: ${{ steps.deployStep.outputs.resourceGroupName }}
+  webAppName:
+    description: Name of the Azure WebApp that the application is deployed to
+    value: ${{ steps.deployStep.outputs.webAppName }}
+
+runs:
+  using: composite
+  steps:
+    # Download Artifacts
+    - name: Download Artifacts
+      uses: actions/download-artifact@v3
+      continue-on-error: false
+        
+    # Log in to Azure
+    - uses: azure/login@v1
+      with:
+        client-id: ${{ inputs.azureClientId }}
+        tenant-id: ${{ inputs.azureTenantId }}
+        subscription-id: ${{ inputs.azureSubscriptionId }}
+
+    # Deploy resources to Azure
+    - uses: azure/arm-deploy@v1
+      id: deployStep
+      with:
+        scope: subscription
+        subscriptionId: ${{ inputs.azureSubscriptionId }}
+        region: ${{ inputs.location }}
+        template: ./infra/main.bicep
+        parameters: ./infra/main.${{ inputs.environmentId }}.parameters.json
+
+    # Deploy code to web app
+    - name: Deploy code to the WebApp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ steps.deployStep.outputs.webAppName }}
+        slot-name: ${{ inputs.deploymentSlotName }}
+        package: ./build
+
+    - name: Deployment Message
+      run: echo "Deployed Application to ${{ inputs.environmentId }}"
+      shell: bash
