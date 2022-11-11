@@ -43,6 +43,7 @@ module webAppDeploy 'webApp.bicep' = {
 
 // Deploy the Deployment Slot to the Web App
 module slotDeploy 'slot.bicep' = if (environment == 'PROD') {
+  dependsOn: [webAppDeploy]
   name: 'slotDeploy'
   scope: rg
   params: {
