@@ -8,11 +8,17 @@
         "location": {
             "value": "EastUS2"
         },
+        "plan": {
+            "value": {
+                "kind": "windows",
+                "name": "asp-0a1b2c-qa",
+                "sku": {
+                    "name": "S1"
+                }
+            }
+        },
         "rgName": {
             "value": "rg-gha-sample-qa"
-        },
-        "planName": {
-            "value": "asp-0a1b2c-qa"
         },
         "webAppName": {
             "value": "app-0a1b2c-qa"

@@ -1,17 +1,17 @@
 param location string = resourceGroup().location
-param planName string
-param sku string = 'S1'
+@allowed(['windows', 'linux', 'functionApp', 'elastic', 'app'])
+param kind string
+param name string
+param sku object
 
-resource appPlan 'Microsoft.Web/serverfarms@2021-01-15' = {
-  name: planName
+resource appServicePlan 'Microsoft.Web/serverfarms@2021-01-15' = {
+  name: name
   location: location
-  kind: 'app'
-  sku: {
-    name: sku
-  }
+  kind: kind
+  sku: sku
   properties: {
     reserved: true
   }
 }
 
-output planId string = appPlan.id
+output planId string = appServicePlan.id
