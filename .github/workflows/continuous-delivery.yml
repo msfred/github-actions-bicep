@@ -77,7 +77,7 @@ jobs:
 
       # Deploy Infrastructure and WebApp
       - id: deploy
-        uses: ./.github/actions/deploy
+        uses: msfred/deploy-infra-webapp@main
         with:
           azureClientId: ${{ secrets.AZURE_CLIENT_ID }}
           azureSubscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
