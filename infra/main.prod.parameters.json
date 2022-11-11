@@ -8,11 +8,17 @@
         "location": {
             "value": "eastus"
         },
+        "plan": {
+            "value": {
+                "kind": "windows",
+                "name": "asp-0a1b2c",
+                "sku": {
+                    "name": "S1"
+                }
+            }
+        },
         "rgName": {
             "value": "rg-gha-sample-prod"
-        },
-        "planName": {
-            "value": "asp-0a1b2c"
         },
         "webAppName": {
             "value": "app-0a1b2c"

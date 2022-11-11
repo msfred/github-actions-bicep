@@ -4,14 +4,10 @@
 targetScope = 'subscription'
 
 @description('The environment that the resources are being deployed to.')
-@allowed([
-  'DEV'
-  'QA'
-  'PROD'
-])
+@allowed(['DEV', 'QA', 'PROD'])
 param environment string
 param location string
-param planName string
+param plan object
 param rgName string
 param slotName string = 'stage'
 param webAppName string
@@ -23,12 +19,14 @@ resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
 }
 
 // Deploy the App Service Plan
-module appPlanDeploy 'appPlan.bicep' = {
-  name: 'appPlanDeploy'
+module appServicePlanDeploy 'appPlan.bicep' = {
+  name: 'appServicePlanDeploy'
   scope: rg
   params: {
     location: location
-    planName: planName    
+    kind: plan.kind
+    name: plan.name
+    sku: plan.sku
   }
 }
 
@@ -38,7 +36,7 @@ module webAppDeploy 'webApp.bicep' = {
   scope: rg
   params: {
     location: location
-    planId: appPlanDeploy.outputs.planId
+    planId: appServicePlanDeploy.outputs.planId
     webAppName: webAppName
   }
 }
@@ -49,7 +47,7 @@ module slotDeploy 'slot.bicep' = if (environment == 'PROD') {
   scope: rg
   params: {
     location: location
-    planId: appPlanDeploy.outputs.planId
+    planId: appServicePlanDeploy.outputs.planId
     slotName: slotName
     webAppName: webAppName
   }
