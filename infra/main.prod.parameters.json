@@ -2,6 +2,11 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "0.0.0.1",
     "parameters": {
+        "applicationInsights": {
+            "value": {
+                "name": "ai-0a1b2c"
+            }
+        },
         "environment": {
             "value": "PROD"
         },
@@ -17,11 +22,15 @@
                 }
             }
         },
-        "rgName": {
-            "value": "rg-gha-sample-prod"
+        "resourceGroup": {
+            "value": {
+                "name": "rg-gha-sample-prod"
+            }
         },
-        "webAppName": {
-            "value": "app-0a1b2c"
+        "webApp": {
+            "value": {
+                "name": "app-0a1b2c"
+            }
         }
     }
 }

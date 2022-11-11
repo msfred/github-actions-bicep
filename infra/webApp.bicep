@@ -1,3 +1,4 @@
+param appInsightsInstrumentationKey string
 @allowed([
   'app'
   'app,linux'
@@ -13,23 +14,23 @@
 ])
 param kind string = 'app'
 param location string = resourceGroup().location
+param name string
 param planId string
-param webAppName string
 
 resource webApp 'Microsoft.Web/sites@2021-01-15' = {
-  name: webAppName
+  name: name
   location: location
   kind: kind
   properties: {
     enabled: true
     hostNameSslStates:[
       {
-        name: '${webAppName}.azurewebsites.net'
+        name: '${name}.azurewebsites.net'
         sslState: 'Disabled'
         hostType: 'Standard'
       }
       {
-        name: '${webAppName}.scm.azurewebsites.net'
+        name: '${name}.scm.azurewebsites.net'
         sslState: 'Disabled'
         hostType: 'Repository'
       }
@@ -38,6 +39,12 @@ resource webApp 'Microsoft.Web/sites@2021-01-15' = {
     serverFarmId: planId
     siteConfig: {
       alwaysOn: true
+      appSettings: [
+        {
+          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+          value: appInsightsInstrumentationKey
+        }
+      ]
     }
   }
 }

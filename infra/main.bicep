@@ -3,19 +3,31 @@
 
 targetScope = 'subscription'
 
+param appInsights object
 @description('The environment that the resources are being deployed to.')
 @allowed(['DEV', 'QA', 'PROD'])
 param environment string
 param location string
 param plan object
-param rgName string
+param resourceGroup object
 param slotName string = 'stage'
-param webAppName string
+param webApp object
 
 // Resource Group is a dependency and will be created if it does not already exist
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
-  name: rgName
+  name: resourceGroup.name
   location: location
+}
+
+// Deploy the Applications Insights
+module appInsightsDeploy 'appInsights.bicep' = {
+  name: appInsights.name
+  params: {
+    kind: appInsights.kind
+    location: location
+    name: appInsights.name
+  }
+  scope: rg
 }
 
 // Deploy the App Service Plan
@@ -35,9 +47,10 @@ module webAppDeploy 'webApp.bicep' = {
   name: 'webAppDeploy'
   scope: rg
   params: {
+    appInsightsInstrumentationKey: appInsightsDeploy.outputs.InstrumentationKey
     location: location
+    name: webApp.name
     planId: appServicePlanDeploy.outputs.planId
-    webAppName: webAppName
   }
 }
 
@@ -50,10 +63,10 @@ module slotDeploy 'slot.bicep' = if (environment == 'PROD') {
     location: location
     planId: appServicePlanDeploy.outputs.planId
     slotName: slotName
-    webAppName: webAppName
+    webAppName: webApp.name
   }
 }
 
 output environmentId string = environment
-output resourceGroupName string = rgName
-output webAppName string = webAppName
+output resourceGroupName string = resourceGroup.name
+output webAppName string = webApp.name
