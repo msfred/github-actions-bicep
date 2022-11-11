@@ -4,6 +4,7 @@
     "parameters": {
         "appInsights": {
             "value": {
+                "kind": "web",
                 "name": "ai-0a1b2c-qa"
             }
         },
