@@ -69,9 +69,15 @@ jobs:
       url: https://${{ steps.deployStep.outputs.webAppName }}.azurewebsites.net
     
     steps:
+      - run: |
+          echo 'pwd'
+          pwd
+          echo 'ls'
+          ls
+
       # Deploy Infrastructure and WebApp
       - id: deploy
-        uses: ./github/actions/deploy
+        uses: ./.github/actions/deploy
         with:
           azureClientId: ${{ secrets.AZURE_CLIENT_ID }}
           azureSubscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
