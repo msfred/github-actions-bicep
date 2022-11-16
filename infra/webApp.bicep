@@ -23,7 +23,7 @@ resource webApp 'Microsoft.Web/sites@2021-01-15' = {
   kind: kind
   properties: {
     enabled: true
-    hostNameSslStates:[
+    hostNameSslStates: [
       {
         name: '${name}.azurewebsites.net'
         sslState: 'Disabled'

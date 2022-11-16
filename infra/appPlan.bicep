@@ -1,5 +1,5 @@
 param location string = resourceGroup().location
-@allowed(['windows', 'linux', 'functionApp', 'elastic', 'app'])
+@allowed([ 'windows', 'linux', 'functionApp', 'elastic', 'app' ])
 param kind string
 param name string
 param sku object
