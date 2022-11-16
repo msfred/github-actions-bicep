@@ -44,6 +44,7 @@ module appServicePlanDeploy 'appPlan.bicep' = {
 
 // Deploy the Web App
 module webAppDeploy 'webApp.bicep' = {
+  dependsOn: [appServicePlanDeploy]
   name: 'webAppDeploy'
   scope: rg
   params: {
