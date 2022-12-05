@@ -68,6 +68,8 @@ module slotDeploy 'slot.bicep' = if (environment == 'PROD') {
   }
 }
 
+output appInsightsName string = appInsights.name
+output appServicePlanName string = plan.name
 output environmentId string = environment
 output resourceGroupName string = resourceGroup.name
 output webAppName string = webApp.name
