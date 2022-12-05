@@ -4,7 +4,7 @@
 # Use environments to require manual approvals between jobs
 # Environments require public repositories or private repositories on GitHub with Enterprise plans
 
-name: Continuous Delivery w/ Composite Actions
+name: 'Continuous Delivery w/ Composite Actions'
 
 on: 
   push:
@@ -25,6 +25,7 @@ concurrency:
 env:
   deploymentSlotName: stage
   location: eastus
+  templateFile: './infra/main.bicep'
 
 jobs:
   
@@ -36,26 +37,40 @@ jobs:
       # Checks-out the repository under $GITHUB_WORKSPACE, so the job can access it
       - uses: actions/checkout@v3
 
-      - name: Build Steps Here
-        run: echo "Running build steps..."
+      - name: 'Build Steps Here'
+        run: echo 'Running build steps...'
 
-      # Publish the artificats so they are available by subsequent jobs
-      # Uploading application to build artifact
-      - name: Upload ARM Templates as Artifact
+      - name: 'Validate Bicep templates'
+        run: az bicep build -f ./infra/main.bicep
+
+      # Publish the artifacts so they are available by subsequent jobs
+      # Uploading ARM templates to build artifact
+      - name: 'Upload ARM Templates as Artifact'
         continue-on-error: false
         uses: actions/upload-artifact@v3
         with:
           name: infra
           path: infra
 
-      # Publish the artificats so they are available by subsequent jobs
+      # Publish the artifacts so they are available by subsequent jobs
       # Uploading application to build artifact
-      - name: Upload Application Build as Artifact
+      - name: 'Upload Application Build as Artifact'
         continue-on-error: false
         uses: actions/upload-artifact@v3
         with:
           name: build
           path: src
+
+      # Write to the Summary Log
+      - name: 'Write to the Summary Log'
+        run: |
+          echo '# Build' >> $GITHUB_STEP_SUMMARY
+          echo '### Infrastructure' >> $GITHUB_STEP_SUMMARY
+          echo ':white_check_mark: Add to publish artifact' >> $GITHUB_STEP_SUMMARY
+          echo '### Application' >> $GITHUB_STEP_SUMMARY
+          echo ':white_check_mark: Build source code' >> $GITHUB_STEP_SUMMARY
+          echo ':white_check_mark: Unit tests' >> $GITHUB_STEP_SUMMARY
+          echo ':white_check_mark: Add to publish artifact' >> $GITHUB_STEP_SUMMARY
 
 
   # Deploy to the Development servers
@@ -64,9 +79,9 @@ jobs:
     if: github.event_name == 'pull_request'
     needs: Build
     runs-on: ubuntu-latest
-    environment: 
+    environment:
       name: Development
-      url: https://${{ steps.deploy.outputs.webAppName }}.azurewebsites.net
+      url: 'https://${{ steps.deploy.outputs.webAppName }}.azurewebsites.net'
     
     steps:
       # Deploy Infrastructure and WebApp
@@ -78,6 +93,8 @@ jobs:
           azureTenantId: ${{ secrets.AZURE_TENANT_ID }}
           environmentId: dev
           location: ${{ env.location }}
+          parametersFile: './infra/main.dev.parameters.json'
+          templateFile: ${{ env.templateFile }}
 
   # Deploy to the QA servers
   DeployQA:
@@ -85,9 +102,9 @@ jobs:
     if: github.event.ref == 'refs/heads/main'
     needs: Build
     runs-on: ubuntu-latest
-    environment: 
+    environment:
       name: QA
-      url: https://${{ steps.deploy.outputs.webAppName }}.azurewebsites.net
+      url: 'https://${{ steps.deploy.outputs.webAppName }}.azurewebsites.net'
     
     steps:
       # Deploy Infrastructure and WebApp
@@ -99,6 +116,8 @@ jobs:
           azureTenantId: ${{ secrets.AZURE_TENANT_ID }}
           environmentId: qa
           location: ${{ env.location }}
+          parametersFile: './infra/main.qa.parameters.json'
+          templateFile: ${{ env.templateFile }}
 
   # Deploy to the Staging servers
   DeployStage:
@@ -107,7 +126,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: 
       name: Stage
-      url: https://${{ steps.deploy.outputs.webAppName }}-${{ env.deploymentSlotName }}.azurewebsites.net
+      url: 'https://${{ steps.deploy.outputs.webAppName }}-${{ env.deploymentSlotName }}.azurewebsites.net'
 
     outputs:
       resourceGroupName: ${{ steps.deploy.outputs.resourceGroupName }}
@@ -124,6 +143,8 @@ jobs:
           deploymentSlotName: ${{ env.deploymentSlotName }}
           environmentId: prod
           location: ${{ env.location }}
+          parametersFile: './infra/main.prod.parameters.json'
+          templateFile: ${{ env.templateFile }}
 
   # Deploy to the Production servers
   DeployProduction:
@@ -132,11 +153,11 @@ jobs:
     runs-on: ubuntu-latest
     environment: 
       name: Production
-      url: https://${{ needs.DeployStage.outputs.webAppName }}.azurewebsites.net
+      url: 'https://${{ needs.DeployStage.outputs.webAppName }}.azurewebsites.net'
 
     steps:
-      - name: Deploy to Production
-        run: echo "Deploy Application to Production"
+      - name: 'Deploy to Production'
+        run: echo 'Deploy Application to Production'
           
       # Log in to Azure
       - uses: azure/login@v1

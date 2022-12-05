@@ -5,7 +5,7 @@ targetScope = 'subscription'
 
 param appInsights object
 @description('The environment that the resources are being deployed to.')
-@allowed(['DEV', 'QA', 'PROD'])
+@allowed([ 'DEV', 'QA', 'PROD' ])
 param environment string
 param location string
 param plan object
@@ -44,6 +44,7 @@ module appServicePlanDeploy 'appPlan.bicep' = {
 
 // Deploy the Web App
 module webAppDeploy 'webApp.bicep' = {
+  dependsOn: [ appServicePlanDeploy ]
   name: 'webAppDeploy'
   scope: rg
   params: {
@@ -56,7 +57,7 @@ module webAppDeploy 'webApp.bicep' = {
 
 // Deploy the Deployment Slot to the Web App
 module slotDeploy 'slot.bicep' = if (environment == 'PROD') {
-  dependsOn: [webAppDeploy]
+  dependsOn: [ webAppDeploy ]
   name: 'slotDeploy'
   scope: rg
   params: {

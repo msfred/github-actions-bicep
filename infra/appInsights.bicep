@@ -1,4 +1,4 @@
-@allowed(['web', 'ios', 'other', 'store', 'java', 'phone'])
+@allowed([ 'web', 'ios', 'other', 'store', 'java', 'phone' ])
 param kind string
 param location string = resourceGroup().location
 param name string

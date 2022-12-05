@@ -39,6 +39,9 @@ jobs:
       - name: Build Steps Here
         run: echo "Running build steps..."
 
+      - name: Validate Bicep templates
+        run: az bicep build -f ./infra/main.bicep
+
       # Publish the artificats so they are available by subsequent jobs
       # Uploading application to build artifact
       - name: Upload ARM Templates as Artifact
