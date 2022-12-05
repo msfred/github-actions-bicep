@@ -25,6 +25,7 @@ concurrency:
 env:
   deploymentSlotName: 'stage'
   location: 'eastus'
+  templateFile: './infra/main.bicep'
 
 jobs:
   
@@ -92,6 +93,8 @@ jobs:
           azureTenantId: ${{ secrets.AZURE_TENANT_ID }}
           environmentId: 'dev'
           location: ${{ env.location }}
+          parameterFile: './infra/main.dev.parameters.json'
+          templateFile: ${{ env.templateFile }}
 
   # Deploy to the QA servers
   DeployQA:
@@ -113,6 +116,8 @@ jobs:
           azureTenantId: ${{ secrets.AZURE_TENANT_ID }}
           environmentId: 'qa'
           location: ${{ env.location }}
+          parameterFile: './infra/main.qa.parameters.json'
+          templateFile: ${{ env.templateFile }}
 
   # Deploy to the Staging servers
   DeployStage:
@@ -138,6 +143,8 @@ jobs:
           deploymentSlotName: ${{ env.deploymentSlotName }}
           environmentId: 'prod'
           location: ${{ env.location }}
+          parameterFile: './infra/main.prod.parameters.json'
+          templateFile: ${{ env.templateFile }}
 
   # Deploy to the Production servers
   DeployProduction:
