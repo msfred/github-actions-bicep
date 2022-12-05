@@ -62,7 +62,7 @@ Continuous deployment takes this one step further.  When all testing for each en
 stateDiagram
   direction LR
   J1: Build
-  J2: Deploy to Development
+  J2: Deploy to Test
   J21: Deploy Infrastructure
   J22: Deploy Application
   J23: Integration Tests
