@@ -38,7 +38,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: 'Build Steps Here'
-        run: echo 'Running build steps...''
+        run: echo 'Running build steps...'
 
       - name: 'Validate Bicep templates'
         run: az bicep build -f ./infra/main.bicep
@@ -75,12 +75,12 @@ jobs:
 
   # Deploy to the Development servers
   DeployDev:
-    name: 'Development'
+    name: Development
     if: github.event_name == 'pull_request'
     needs: Build
     runs-on: ubuntu-latest
     environment:
-      name: 'Development'
+      name: Development
       url: 'https://${{ steps.deploy.outputs.webAppName }}.azurewebsites.net'
     
     steps:
@@ -91,19 +91,19 @@ jobs:
           azureClientId: ${{ secrets.AZURE_CLIENT_ID }}
           azureSubscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           azureTenantId: ${{ secrets.AZURE_TENANT_ID }}
-          environmentId: 'dev'
+          environmentId: dev
           location: ${{ env.location }}
           parametersFile: './infra/main.dev.parameters.json'
           templateFile: ${{ env.templateFile }}
 
   # Deploy to the QA servers
   DeployQA:
-    name: 'QA'
+    name: QA
     if: github.event.ref == 'refs/heads/main'
     needs: Build
     runs-on: ubuntu-latest
     environment:
-      name: 'QA'
+      name: QA
       url: 'https://${{ steps.deploy.outputs.webAppName }}.azurewebsites.net'
     
     steps:
@@ -114,18 +114,18 @@ jobs:
           azureClientId: ${{ secrets.AZURE_CLIENT_ID }}
           azureSubscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           azureTenantId: ${{ secrets.AZURE_TENANT_ID }}
-          environmentId: 'qa'
+          environmentId: qa
           location: ${{ env.location }}
           parametersFile: './infra/main.qa.parameters.json'
           templateFile: ${{ env.templateFile }}
 
   # Deploy to the Staging servers
   DeployStage:
-    name: 'Stage'
+    name: Stage
     needs: DeployQA
     runs-on: ubuntu-latest
     environment: 
-      name: 'Stage'
+      name: Stage
       url: 'https://${{ steps.deploy.outputs.webAppName }}-${{ env.deploymentSlotName }}.azurewebsites.net'
 
     outputs:
@@ -141,23 +141,23 @@ jobs:
           azureSubscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           azureTenantId: ${{ secrets.AZURE_TENANT_ID }}
           deploymentSlotName: ${{ env.deploymentSlotName }}
-          environmentId: 'prod'
+          environmentId: prod
           location: ${{ env.location }}
           parametersFile: './infra/main.prod.parameters.json'
           templateFile: ${{ env.templateFile }}
 
   # Deploy to the Production servers
   DeployProduction:
-    name: 'Production'
+    name: Production
     needs: DeployStage
     runs-on: ubuntu-latest
     environment: 
-      name: 'Production'
+      name: Production
       url: 'https://${{ needs.DeployStage.outputs.webAppName }}.azurewebsites.net'
 
     steps:
       - name: 'Deploy to Production'
-        run: echo "Deploy Application to Production"
+        run: echo 'Deploy Application to Production'
           
       # Log in to Azure
       - uses: azure/login@v1
