@@ -64,8 +64,12 @@ jobs:
       - name: 'Write to the Summary Log'
         run: |
           echo '# Build' >> $GITHUB_STEP_SUMMARY
-          echo 'Infrastructure folder saved to publish artifact' >> $GITHUB_STEP_SUMMARY
-          echo 'Application build folder saved to publish artifact' >> $GITHUB_STEP_SUMMARY
+          echo '### Infrastructure' >> $GITHUB_STEP_SUMMARY
+          echo ':white_check_mark: Add to publish artifact' >> $GITHUB_STEP_SUMMARY
+          echo '### Application' >> $GITHUB_STEP_SUMMARY
+          echo ':white_check_mark: Build source code' >> $GITHUB_STEP_SUMMARY
+          echo ':white_check_mark: Unit tests' >> $GITHUB_STEP_SUMMARY
+          echo ':white_check_mark: Add to publish artifact' >> $GITHUB_STEP_SUMMARY
 
 
   # Deploy to the Development servers
