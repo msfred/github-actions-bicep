@@ -14,3 +14,4 @@ The [Continuous Delivery Workflow](https://github.com/fredcicles/github-actions/
 
 ## Continuous Deployment
 Continuous deployment takes this one step further.  When all testing for each environment (unit / integration / user acceptance) can be automated, then manual approval steps can be removed and the workflow of code from commit to production deployment can be fully automated.
+
