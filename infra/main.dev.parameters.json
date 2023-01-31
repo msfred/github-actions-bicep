@@ -5,7 +5,7 @@
         "appInsights": {
             "value": {
                 "kind": "web",
-                "name": "ai-0a1b2c-dev"
+                "name": "ai-0U812-dev"
             }
         },
         "environment": {
@@ -17,7 +17,7 @@
         "plan": {
             "value": {
                 "kind": "windows",
-                "name": "asp-0a1b2c-dev",
+                "name": "asp-0U812-dev",
                 "sku": {
                     "name": "S1"
                 }
@@ -25,12 +25,12 @@
         },
         "resourceGroup": {
             "value": {
-                "name": "rg-gha-sample-dev"
+                "name": "rg-github-actions-bicep-dev"
             }
         },
         "webApp": {
             "value": {
-                "name": "app-0a1b2c-dev"
+                "name": "app-0U812-dev"
             }
         }
     }
