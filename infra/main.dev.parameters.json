@@ -25,7 +25,7 @@
         },
         "resourceGroup": {
             "value": {
-                "name": "rg-gha-sample-dev"
+                "name": "rg-github-actions-bicep-dev"
             }
         },
         "webApp": {
